@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="home">
+  <div class="show-window">
+    <div class="container">
+      <div class="row">
+        <div class="owl-dots"></div>
+        <div class="slides owl-carousel">
+          {% for question in slider_question_list %}
+          <div class="slide">
+            <h1>
+              <a href="{{ question.get_absolute_url }}" class="uncolor undecorate">“{{ question.title }}”</a>
+            </h1>
+            <div class="sides">
+              {% with for_answer_list=question.get_for_answer_list|slice:":6" %}
+              <div class="side for stance count-{{ for_answer_list.count }}">
+                <span class="caption">동의함</span>
+                {% spaceless %}
+                {% for answer in for_answer_list %}
+                {% with candidate=answer.candidate %}
+                <a href="{{ candidate.party.get_absolute_url }}" class="candidate-wrapper">
+                  <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ candidate.party.name }} {{ candidate.name }}"></div>
+                </a>
+                {% endwith %}
+                {% endfor %}
+                {% endspaceless %}
+              </div>
+              {% endwith %}
+              {% with aga_answer_list=question.get_aga_answer_list|slice:":6" %}
+              <div class="side aga stance count-{{ aga_answer_list.count }}">
+                <span class="caption">동의 안 함</span>
+                {% spaceless %}
+                {% for answer in aga_answer_list %}
+                {% with candidate=answer.candidate %}
+                <a href="{{ candidate.party.get_absolute_url }}" class="candidate-wrapper">
+                  <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ candidate.party.name }} {{ candidate.name }}"></div>
+                </a>
+                {% endwith %}
+                {% endfor %}
+                {% endspaceless %}
+              </div>
+              {% endwith %}
+              {% with etc_answer_list=question.get_unreplied_candidate_list %}
+              <div class="side etc count-{{ etc_answer_list|length }}">
+                <span class="caption">미응답</span>
+                {% spaceless %}
+                {% for candidate in etc_answer_list %}
+                <a href="{{ candidate.party.get_absolute_url }}" class="candidate-wrapper">
+                  <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ candidate.party.name }} {{ candidate.name }}"></div>
+                </a>
+                {% endfor %}
+                {% endspaceless %}
+              </div>
+              {% endwith %}
+            </div>
+            <div class="more">
+              <a href="{{ question.get_absolute_url }}">전체 답변 보기 &gt;</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="feed">
+    <div class="container">
+      <div class="row">
+        <h3 class="head">공론화 <a href="{% url 'policy' %}">100개</a>가 쌓이면, 스누초이스에서 각 후보들에게 공식적으로 질의서를 발송합니다.</h3>
+        {% include 'choice/question_loop.html' %}
+        <div class="question write">
+          <img src="{% static 'img/pencil.svg' %}">
+          <span class="write-yours">당신의 질문은 무엇인가요?</span>
+        </div>
+        <a href="{% url 'election_list' %}" class="uncolor undecorate">
+          <div class="question nutshell shade-{{ '123'|random }}">총학생회 · 단과대학생회 선거<br><b>한눈에 보기</b></div>
+        </a>
+        <div class="see-list">
+          <a href="{% url 'question_list' %}">전체 질문 보기 &gt;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

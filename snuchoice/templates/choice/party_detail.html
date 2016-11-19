@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block open_graph %}
+<meta property="og:title"       content="{{ party.name }}">
+<meta property="og:description" content="{{ party.slogan }}">
+<meta property="og:type"        content="article">
+<meta property="og:url"         content="https://snuchoice.com{{ party.get_absolute_url }}">
+{% endblock %}
+
+{% block content %}
+<div class="party-detail">
+  <div class="mainland">
+    <div class="container">
+      <div class="party-caption">{{ party.election }} 선거운동본부</div>
+      {% with party_qs=party.election.party_set %}
+      {% if party_qs.count > 1 %}
+      <div class="party-list">
+        {% for p in party_qs.all %}
+        <a href="{{ p.get_absolute_url }}">{{ p.name }}</a>{% if not forloop.last %} / {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+      <div class="row">
+        <div class="party-head" style="background-color: #{{ party.color }};">
+          <h2>{{ party.slogan }}</h2>
+          <h1>{{ party.name }}</h1>
+          {% spaceless %}
+          {% for candidate in party.candidate_set.all %}
+          <div class="candidate-wrapper">
+            <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');"></div>
+            <div class="candidate-name">{% if candidate.position == "정" %}정후보{% else %}부후보{% endif %} <strong>{{ candidate.name }}</strong></div>
+          </div>
+          {% endfor %}
+          {% endspaceless %}
+        </div>
+      </div>
+      <div class="book">
+        <a class="uncolor undecorate"{% if party.book %} href="{{ party.book.url }}"{% endif %}>
+          <img src="{% static 'img/book.svg' %}">
+          정책자료집
+          <span class="text-muted">
+          {% if party.book %}
+          {{ party.book.size|filesizeformat }}
+          {% else %}
+          업로드 중
+          {% endif %}
+          </span>
+        </a>
+      </div>
+      <div class="leaflet">
+        <a class="uncolor undecorate"{% if party.leflet_1 %} href="{{ party.leflet_1.url }}"{% endif %}>
+          <img src="{% static 'img/leaflet.svg' %}">
+          리플렛
+          <span class="text-muted">
+          {% if party.leflet_1 %}
+          {{ party.leflet_1.size|filesizeformat }}
+          {% else %}
+          업로드 중
+          {% endif %}
+          </span>
+        </a>
+      </div>
+      <div class="row">
+        <hr style="border-color: #{{ party.color }};">
+      </div>
+      {% for candidate in party.candidate_set.all %}
+      <div class="answer-list">
+        <h3>{{ candidate.name }}의 답변</h3>
+        {% for answer in candidate.answer_set.all %}
+        <a href="{{ answer.question.get_absolute_url }}#candidate-{{ candidate.id }}" class="uncolor undecorate">
+          <div class="answer">
+            {{ answer.question.title }}
+            {% if answer.stance %}
+            <span class="text-success">동의함</span>
+            {% elif answer.stance is not None %}
+            <span class="text-danger">동의하지 않음</span>
+            {% else %}
+            <span class="text-muted">답변 거부</span>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

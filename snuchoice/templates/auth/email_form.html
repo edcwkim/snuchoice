@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth mainland">
+  <div class="container">
+    <div class="row">
+      <div id="emailConfirmFormWrapper" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <h2>구성원 인증</h2>
+        <h1>서울대학교 학부생임을 확인해 주세요.</h1>
+        <p class="policy">스누초이스는 <strong>서울대학교 학사과정 재학생 및 휴학생</strong>만 가입할 수 있습니다. 비학생 가입 시에는 계정 이용이 정지될 수 있습니다. 자세한 사항은 <a href="{% url 'policy' %}">운영 정책</a>을 확인해 주세요.</p>
+        <form action="" method="post" id="emailConfirmForm">{% csrf_token %}
+          {% include 'auth/email_form_input.html' %}
+          <button type="submit" class="btn btn-primary btn-block" data-loading-text="전송 중...">인증하기</button>
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div id="loginButtonArea" class="text-center">
+      <p class="already">이미 가입하셨나요?<br>아래 버튼을 통해 로그인하실 수 있습니다.</p>
+      <a href="{% url 'login' %}?{{ query_string }}" class="btn btn-danger" role="button">로그인</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

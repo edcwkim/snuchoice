@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="question-edit mainland">
+  <div class="container">
+    <form action="" method="post">{% csrf_token %}
+      <h1>삭제하시겠습니까?</h1>
+      <button type="submit" class="btn btn-block btn-danger">삭제하기</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

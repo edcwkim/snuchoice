@@ -1,0 +1,28 @@
+<footer>
+  <div class="container">
+    {% if user.is_authenticated %}
+    <div class="col-xs-3">
+      <a href="{% url 'about' %}" class="uncolor">소개</a>
+    </div>
+    <div class="col-xs-3">
+      <a href="{% url 'policy' %}" class="uncolor">정책</a>
+    </div>
+    <div class="col-xs-3">
+      <a href="{% url 'settings' %}" class="uncolor">설정</a>
+    </div>
+    <div class="col-xs-3">
+      <a href="{% url 'logout' %}" class="uncolor">로그아웃</a>
+    </div>
+    {% else %}
+    <div class="col-xs-4">
+      <a href="{% url 'about' %}" class="uncolor">소개</a>
+    </div>
+    <div class="col-xs-4">
+      <a href="{% url 'policy' %}" class="uncolor">정책</a>
+    </div>
+    <div class="col-xs-4">
+      <a href="{{ login_url }}" class="uncolor">로그인</a>
+    </div>
+    {% endif %}
+  </div>
+</footer>

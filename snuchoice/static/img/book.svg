@@ -1,0 +1,12 @@
+<svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="64px" height="64px" viewBox="0 0 64 64">
+<g transform="translate(0, 0)">
+<path fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M46,2h6c2.2,0,4,1.8,4,4v52
+	c0,2.2-1.8,4-4,4h-6" stroke-linejoin="miter"></path>
+<rect x="8" y="2" fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" width="38" height="60" stroke-linejoin="miter"></rect>
+<line data-color="color-2" fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" x1="18" y1="36" x2="34" y2="36" stroke-linejoin="miter"></line>
+<line data-color="color-2" fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" x1="18" y1="42" x2="26" y2="42" stroke-linejoin="miter"></line>
+<line fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" x1="56" y1="50" x2="8" y2="50" stroke-linejoin="miter"></line>
+<line fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" x1="8" y1="28" x2="56" y2="28" stroke-linejoin="miter"></line>
+<polygon data-color="color-2" fill="none" stroke="#444444" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" points="
+	30,2 30,18 24,14 18,18 18,2 " stroke-linejoin="miter"></polygon></g>
+</svg>

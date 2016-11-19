@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="answer-edit mainland">
+  <div class="container">
+    <h1>답변하기</h1>
+    <form action="" method="post">{% csrf_token %}
+      <label class="radio-inline">
+        <input type="radio" name="stance" value="T" required> “동의함”
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="stance" value="F" required> “동의하지 않음”
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="stance" value="N" required> 답변 거부
+      </label>
+      {% bootstrap_form form %}
+      <button type="submit" class="btn btn-default btn-block">등록</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

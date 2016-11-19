@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}question-list-body{% endblock %}
+{% block content %}
+<div class="question-list home">
+  <div class="feed">
+    <div class="container">
+      <div class="row">
+        <div class="question write">
+          <img src="{% static 'img/pencil.svg' %}">
+          <span class="write-yours">당신의 질문을 등록해 보세요.</span>
+        </div>
+        {% include 'choice/question_loop.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

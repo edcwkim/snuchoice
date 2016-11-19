@@ -1,0 +1,48 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SNU CHOICE</title>
+    <meta name="description" content="서울대의 후보를 알아본다">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000011">
+    <meta name="apple-mobile-web-app-title" content="SNU CHOICE">
+    <meta name="application-name" content="SNU CHOICE">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name"   content="SNU CHOICE">
+    {% block open_graph %}
+    <meta property="og:title"       content="스누초이스">
+    <meta property="og:description" content="서울대의 후보를 알아본다">
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://snuchoice.com/"> {# canonical url #}
+    {% endblock %}
+    {% block open_graph_image %}
+    <meta property="og:image" content="https://snuchoice.com{% static 'img/logo.png' %}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1910">
+    <meta property="og:image:height" content="1000">
+    {% endblock %}
+    <script src="{% static 'js/owl.carousel.min.js' %}" defer></script>
+    <script src="{% static 'js/ajax_settings.js' %}" defer></script>
+    <script src="{% static 'js/base.js' %}" defer></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block google_analytics %}{% include 'includes/google_analytics.html' %}{% endblock %}
+  </head>
+  <body class="{% block body_class %}{% endblock %}{% if user.is_authenticated %} authenticated{% endif %}">
+    {% block header %}{% include 'includes/header.html' %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block footer %}{% include 'includes/footer.html' %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    {% if login_url %}
+    <script>var login_url = "{{ login_url }}";</script>
+    {% endif %}
+  </body>
+</html>

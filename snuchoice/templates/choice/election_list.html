@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static shuffle %}
+
+{% block content %}
+<div class="election-list mainland">
+  <div class="container">
+    <h1>
+      <img src="{% static 'img/election_2016.svg' %}" alt="학생회 선거 2016">
+    </h1>
+    <ol class="schedule" start="0">
+      <li>이번 달에는 자연대를 제외한 모든 단위에서 선거가 진행됩니다.</li>
+      <li>총학생회, 인문대, 사회대, 간호대, 경영대, 공대, 농생대, 미대, 사범대, 생활대, 약대, 음대, 의대, 치의대 학생회 투표가 <strong>11월 14일 월요일</strong>부터 시작됩니다.</li>
+      <li>수의대 선거는 후보 등록자가 없어 무산되었습니다.</li>
+    </ol>
+    <div class="news">
+      <div class="row">
+        <hr>
+        <a href="{{ sub.homepage }}">
+          <img{% if sub.logo %} src="{{ sub.logo.url }}"{% endif %} alt="서울대학교 방송 SUB" class="logo press">
+        </a>
+        <div class="col-xs-12">
+          <div class="iframe-outer-container">
+            <div class="iframe-container">
+              <iframe src="{{ sub.facebook }}" width="560" height="315" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <a href="{{ news.homepage }}">
+          <img{% if news.logo %} src="{{ news.logo.url }}"{% endif %} alt="대학신문" class="logo press">
+        </a>
+        <div class="col-xs-12">
+          <ul>
+            {% for link, title in news_list|shuffle %}
+            <li>
+              <a href="{{ link }}">{{ title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <a href="{{ journal.homepage }}">
+          <img{% if journal.logo %} src="{{ journal.logo.url }}"{% endif %} alt="서울대저널" class="logo press">
+        </a>
+        <div class="col-xs-12">
+          <ul>
+            {% for link, title in journal_list|shuffle %}
+            <li>
+              <a href="{{ link }}">{{ title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% for election in elections %}
+    <div class="election">
+      <div class="row">
+        <hr>
+        {% with parties=election.party_set.all %}
+        <h2>
+          {{ election.name }}
+          {% if parties.count %}
+          <span class="text-muted">{% if parties.count != 1 %}경선{% else %}단독출마{% endif %}</span>
+          {% endif %}
+        </h2>
+        {% for party in parties|shuffle %}
+        <div class="party col-xs-{% widthratio 12 parties.count 1 %}">
+          <a href="{{ party.get_absolute_url }}" class="uncolor undecorate">
+            <div class="party-logo"{% if party.logo %} style="background-image: url('{{ party.logo.url }}');"{% endif %}></div>
+          </a>
+        </div>
+        {% empty %}
+        <div class="party-empty col-xs-12 text-muted">등록한 후보가 없거나 후보들이 현재 플랫폼에 참여하지 않고 있습니다.</div>
+        {% endfor %}
+        {% endwith %}
+      </div>
+    </div>
+    {% endfor %}
+    <div class="election">
+      <div class="row">
+        <hr>
+        <h2>공대 <span class="text-muted">단독출마</span></h2>
+      </div>
+      <div class="party-empty col-xs-12 text-muted"><a href="{% url 'about' %}#notice">다음 사유</a>로 인하여 서비스하지 않습니다.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

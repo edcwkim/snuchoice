@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth mainland">
+  <div class="container">
+    <h1>회원 탈퇴</h1>
+    <form action="" method="post">{% csrf_token %}
+      <button type="submit" class="btn btn-danger btn-block btn-lg">탈퇴하기</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

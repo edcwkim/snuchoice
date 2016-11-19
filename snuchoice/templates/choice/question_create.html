@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="question-edit mainland">
+  <div class="container">
+    <h1>후보에게 질문하기</h1>
+    <form action="" method="post" class="question-form">{% csrf_token %}
+      <div class="question-wrapper">
+        <div class="form-group{% if form.title.errors %} has-error{% endif %}">
+          {% render_field form.title class+="form-control" placeholder="입력하세요" %}
+          {{ form.title.errors }}
+        </div>
+        <h2>“위 명제에 동의하십니까?”</h2>
+      </div>
+      <div class="panel panel-default one">
+        <div class="panel-heading">질문할 후보 선택</div>
+        <div class="panel-body">
+          <div class="select-chong">
+            <div class="radio">
+              <label>
+                <input type="radio" name="chong" value="Y" required>
+                <span>총</span>
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="chong" value="N" required>
+                <span>{% if college_election in college_elections %}{{ college_election.name }}{% else %}단대{% endif %}</span>
+              </label>
+            </div>
+          </div>
+          {% if college_election not in college_elections %}
+          <div class="select-college disabled row">
+            {% for election in college_elections %}
+            <div class="college col-xs-4 col-sm-2">
+              <label class="radio-inline">
+                <input type="radio" name="college_order" value="{{ election.college_order }}" disabled>
+                <span>{{ election.name }}</span>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="select-title"></div>
+      {% if form.name %}
+      <div class="panel panel-default two">
+        <div class="panel-heading">질문자 정보 입력</div>
+        <div class="panel-body user-info">
+          <div class="form-group{% if form.name.errors %} has-error{% endif %}">
+            {% render_field form.name class+="form-control" placeholder="이름" %}
+            {{ form.name.errors }}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <p class="explanation">✓ 질문의 형식은 완결된 문장이어야 합니다.</p>
+      <p class="explanation">✓ 단대 질문의 경우, 본인의 단대를 선택하여 주시기 바랍니다.</p>
+      <button type="submit" class="btn btn-default btn-block btn-lg">등록하기</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

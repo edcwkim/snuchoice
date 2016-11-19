@@ -1,0 +1,7 @@
+﻿Django<1.11
+Pillow
+psycopg2
+html5lib
+beautifulsoup4
+django-bootstrap3
+django_widget_tweaks

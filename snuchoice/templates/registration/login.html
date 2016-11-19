@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap3 widget_tweaks %}
+
+{% block content %}
+<div class="auth mainland">
+  <div class="container">
+    <h1>로그인</h1>
+    <div class="row">
+      <div id="loginFormWrapper" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <form action="" method="post" id="loginForm" >{% csrf_token %}
+          <div class="form-group">
+            {% render_field form.username class+="form-control" placeholder="마이스누 이메일" type="email" %}
+            {{ form.username.errors }}
+          </div>
+          <div class="form-group">
+            {% render_field form.password class+="form-control" placeholder="비밀번호" %}
+            {{ form.password.errors }}
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">들어가기</button>
+          {{ form.non_field_errors }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

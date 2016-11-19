@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block open_graph %}
+<meta property="og:title"       content="“{{ question.title }}”">
+<meta property="og:description" content="{% if all_elections %}총학생회와 각 단대{% else %}{{ question.election.name }}{% endif %} 후보들에게 질문합니다.{% if not question.questionnaire_sent %} {{ votes_left }}개의 공론화가 더 모이면, 후보들에게 공식적으로 질의서가 전달됩니다.{% endif %}">
+<meta property="og:type"        content="article">
+<meta property="og:url"         content="https://snuchoice.com{{ question.get_absolute_url }}">
+<meta name="author"             content="{{ question.get_html_meta_author }}">
+{% endblock %}
+
+{% block content %}
+<div class="question-detail">
+  <div class="mainland">
+    <div class="container">
+      <div class="prefix">
+        {% if all_elections %}
+        {% if question.election.college_order == 0 %}총학생회와 {% endif %}각 단대
+        {% else %}
+        {{ question.election.name }}
+        {% endif %}
+        후보들에게 질문합니다.
+      </div>
+      <h1>“{{ question.title }}”</h1>
+      <div class="postfix">위 명제에 동의하십니까?</div>
+      <div class="stance for">
+        <span class="caption">동의함</span>
+        <div class="clearfix"></div>
+        {% spaceless %}
+        {% for party, answers in for_answers_by_party %}
+        {% for answer in answers %}
+        {% with candidate=answer.candidate %}
+        <a href="#candidate-{{ candidate.id }}">
+          <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ party.name }} {{ candidate.name }}"></div>
+        </a>
+        {% endwith %}
+        {% endfor %}
+        {% endfor %}
+        {% endspaceless %}
+      </div>
+      <div class="stance aga">
+        <span class="caption">동의하지 않음</span>
+        <div class="clearfix"></div>
+        {% spaceless %}
+        {% for party, answers in aga_answers_by_party %}
+        {% for answer in answers %}
+        {% with candidate=answer.candidate %}
+        <a href="#candidate-{{ candidate.id }}">
+          <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ party.name }} {{ candidate.name }}"></div>
+        </a>
+        {% endwith %}
+        {% endfor %}
+        {% endfor %}
+        {% endspaceless %}
+      </div>
+      {% if unreplied_candidates %}
+      <div class="stance etc">
+        <span class="caption">미응답</span>
+        <div class="clearfix"></div>
+        {% spaceless %}
+        {% for candidate in unreplied_candidates %}
+        {% if question.election.college_order == 0 or candidate.election.college_order != 0 %}
+        <a href="#candidate-{{ candidate.id }}">
+          <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ candidate.party.name }} {{ candidate.name }}"></div>
+        </a>
+        {% endif %}
+        {% endfor %}
+        {% endspaceless %}
+      </div>
+      {% endif %}
+      <div class="progress" data-threshold="{{ question.THRESHOLD }}">
+        <div class="character character-{{ '0123'|random }}" style="left: {{ question.get_achievement_percent }}%;"></div>
+        <div class="bar">
+          <span style="width: {{ question.get_achievement_percent }}%;"></span>
+        </div>
+      </div>
+      <div class="action">
+        <form action="{% url 'question_vote' %}" method="post" class="vote-wrapper{% if user in question.voters.all %} voted{% endif %}">
+          <input name="id" type="number" value="{{ question.id }}" hidden>
+          <button type="submit" class="vote">공론화<br><span class="like-count">{{ question.voters.count }}</span></button>
+          <svg x="0px" y="0px" width="90px" height="90px" viewBox="0 0 90 90">
+            <circle fill="none" cx="45" cy="45" r="44" stroke-width="2"></circle>
+            <circle fill="none" cx="45" cy="45" r="44" stroke-width="2" transform="rotate(-90, 45, 45)" class="vote-stroke"></circle>
+          </svg>
+        </form>
+        <div class="line"></div>
+        <div class="detail">
+          {% if not question.questionnaire_sent %}
+          <span><span class="likes-left">{{ votes_left }}</span>개의 공론화가 더 모이면, 후보들에게 공식적으로 질의서가 전달됩니다.</span>
+          {% else %}
+          <span>{{ question.questionnaire_sent|date:"n월 j일" }} {{ question.questionnaire_sent|time:"H시" }} 후보들에게 질의서가 발송되었습니다.</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="share">
+        <a href="https://facebook.com/sharer.php?u=https://snuchoice.com{{ question.get_absolute_url }}" target="_blank" class="undecorate">
+          <span class="share-icon facebook"></span>
+        </a>
+        <a href="https://twitter.com/intent/tweet?url=https://snuchoice.com{{ question.get_absolute_url }}&amp;text=“{{ question.title }}”" target="_blank" class="undecorate">
+          <span class="share-icon twitter"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="answers">
+    <div class="container">
+      {% for party, answers in answers_by_party %}
+      <div class="party-head">
+        {% if party.logo %}
+        <a href="{{ party.get_absolute_url }}">
+          <div class="party-logo" style="background-image: url('{{ party.logo.url }}');"></div>
+        </a>
+        {% endif %}
+        <div class="party-go">
+          <a href="{{ party.get_absolute_url }}">선거운동본부 &gt;</a>
+        </div>
+      </div>
+      {% for answer in answers %}
+      <div class="answer" id="candidate-{{ answer.candidate.id }}">
+        <span class="candidate"{% if party.color %} style="color: #{{ party.color }};"{% endif %}>
+          <span class="party">{{ party.name }}</span>
+          <span class="name">{{ answer.candidate.name }}</span>
+        </span>
+        {% if answer.stance %}
+        <span class="stance-right pull-right text-success">동의함</span>
+        {% elif answer.stance is not None %}
+        <span class="stance-right pull-right text-danger">동의하지 않음</span>
+        {% else %}
+        <span class="stance-right pull-right">답변 거부</span>
+        {% endif %}
+        <div class="content">
+          {{ answer.get_trimmed_content|linebreaksbr }}
+          {% if answer.past_content_limit %}
+          <br>
+          <span class="text-muted">답변 분량 제한을 초과하였습니다.</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      {% empty %}
+      {% if not all_elections %}
+      <div class="empty">등록된 답변이 없습니다.</div>
+      {% endif %}
+      {% endfor %}
+      {% if all_elections %}
+      <div class="election-head colleges">
+        {% for election in college_elections %}
+        <span class="college{% if forloop.counter == 1 %} selected{% endif %}" data-id="{{ election.college_order }}">{{ election.name }}</span>
+        {% endfor %}
+      </div>
+      {% for party, answers in other_answers_by_party %}
+      <div data-college-id="{{ party.election.college_order }}">
+        <div class="party-head">
+          {% if party.logo %}
+          <a href="{{ party.get_absolute_url }}">
+            <div class="party-logo" style="background-image: url('{{ party.logo.url }}');"></div>
+          </a>
+          {% endif %}
+          <div class="party-go">
+            <a href="{{ party.get_absolute_url }}">선거운동본부 &gt;</a>
+          </div>
+        </div>
+        {% for answer in answers %}
+        <div class="answer" id="candidate-{{ answer.candidate.id }}">
+          <span class="candidate"{% if party.color %} style="color: #{{ party.color }};"{% endif %}>
+            <span class="party">{{ party.name }}</span>
+            <span class="name">{{ answer.candidate.name }}</span>
+          </span>
+          {% if answer.stance %}
+          <span class="stance-right pull-right text-success">동의함</span>
+          {% elif answer.stance is not None %}
+          <span class="stance-right pull-right text-danger">동의하지 않음</span>
+          {% else %}
+          <span class="stance-right pull-right">답변 거부</span>
+          {% endif %}
+          <div class="content">
+            {{ answer.get_trimmed_content|linebreaksbr }}
+            {% if answer.past_content_limit %}
+            <br>
+            <span class="text-muted">답변 분량 제한을 초과하였습니다.</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <div class="empty" style="display: none;">등록된 답변이 없습니다.</div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="mainland">
+    <div class="container">
+      {% if unreplied_candidates %}
+      {% for candidate in unreplied_candidates %}
+      {% if question.election.college_order == 0 or candidate.election.college_order != 0 %}
+      <div class="no-answer" id="candidate-{{ candidate.id }}">
+        <span class="candidate"{% if candidate.party.color %} style="color: #{{ candidate.party.color }};"{% endif %}>
+          <span class="party">{{ candidate.party.name }}</span>
+          <span class="name">{{ candidate.name }}</span>
+          <span class="text-muted">{{ candidate.election.name }}</span>
+        </span>
+        {% if not question.past_deadline or question.initial_order != 0 and candidate.election.college_order != 0 %}
+        <span class="no-type pull-right pending">답변 대기</span>
+        {% elif not question.past_hard_deadline and candidate in question.delayed_candidates.all %}
+        <span class="no-type pull-right pending">답변 기한 연장</span>
+        {% else %}
+        <span class="no-type pull-right reject">답변 기한 만료</span>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% elif question.answer_set.exists %}
+      <div class="no-candidates">모든 후보들이 답변을 등록하였습니다.</div>
+      {% else %}
+      <div class="no-candidates">후보들이 현재 플랫폼에 참여하지 않고 있습니다.</div>
+      {% endif %}
+      <div class="row">
+        <hr>
+      </div>
+      <div class="creator">
+        <div class="creator-title">질의자</div>
+        <div class="creator-name">
+        {% with author=question.author %}
+          {% if question.written_by_press %}
+          {# 언론사 로고 넣기 전에 떔빵 #}
+          <a href="{{ author.press.homepage }}">
+            <img{% if author.press.logo %} src="{{ author.press.logo.url }}"{% endif %} alt="{{ author.press.name }}">
+          </a>
+          {% else %}
+          {{ author.get_full_name }}
+          {% endif %}
+        {% endwith %}
+        </div>
+      </div>
+      {% if question.initial_order != 0 %}
+      <div class="creator-notice">이 질문은 학내 종합시사지 서울대저널과 스누초이스 팀이 공동으로 선정한 초기 질문입니다.</div>
+      {% endif %}
+    </div>
+  </div>
+  {% comment %}
+  {% if user.is_candidate %}
+  {% if question.election.college_order == 0 or user.candidate.election.college_order != 0 %}
+  <div class="candidate-answer-action">
+    {% if user.candidate in question.get_replied_candidate_list %}
+    <a href="{% url 'answer_update' question.pk %}">답변 수정하기</a>
+    {% else %}
+    <a href="{% url 'answer_create' question.pk %}">답변하기</a>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% endif %}
+  {% if user == question.author and question.answer_set.count == 0 %}
+  <div class="candidate-answer-action">
+    <a href="{% url 'question_delete' question.pk %}">삭제하기</a>
+  </div>
+  {% endif %}
+  {% endcomment %}
+</div>
+{% endblock %}

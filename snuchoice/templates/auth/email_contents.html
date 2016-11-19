@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>[스누초이스] 서울대 구성원 인증 메일</title>
+  </head>
+  <body>
+    <p>스누초이스 인증 메일입니다. 구성원 인증을 마치려면 하단의 링크를 통해 접속해 주세요. 감사합니다.</p>
+    <p>
+      <a href="{{ url }}{% if next %}?next={{ next }}{% endif %}">
+        {{ url }}{% if next %}?next={{ next }}{% endif %}
+      </a>
+    </p>
+  </body>
+</html>

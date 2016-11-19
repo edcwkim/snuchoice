@@ -1,0 +1,47 @@
+{% for question in question_loop %}
+<div class="question">
+  <h2 class="title">
+    <a href="{{ question.get_absolute_url }}" class="uncolor undecorate">“{{ question.title }}”</a>
+  </h2>
+  {% with achievement_percent=question.get_achievement_percent %}
+  <div class="progress" data-threshold="{{ question.THRESHOLD }}">
+    <div class="character character-{{ '0123'|random }}" style="left: {{ achievement_percent }}%;"></div>
+    <div class="bar">
+      <span style="width: {{ achievement_percent }}%;"></span>
+    </div>
+  </div>
+  {% endwith %}
+  <div class="actions">
+    <form action="{% url 'question_vote' %}" method="post" class="vote-wrapper{% if user in question.voters.all %} voted{% endif %}">{% csrf_token %}
+      <input name="id" type="number" value="{{ question.id }}" hidden>
+      <button type="submit" class="vote">공론화<br><span class="count">{{ question.voters.count }}</span></button>
+      <svg x="0px" y="0px" width="80px" height="80px" viewBox="0 0 80 80">
+        <circle fill="none" cx="40" cy="40" r="39" stroke-width="2"></circle>
+        <circle fill="none" cx="40" cy="40" r="39" stroke-width="2" transform="rotate(-90, 40, 40)" class="vote-stroke"></circle>
+      </svg>
+    </form>
+    <div class="line"></div>
+    <div class="detail">
+      <a href="{{ question.get_absolute_url }}">자세히 보기 &gt;</a>
+    </div>
+  </div>
+  {% if question.answer_set.exists %}
+  <div class="answered">
+    <b>답변한 사람들</b>
+    {% spaceless %}
+    {% for answer in question.get_answer_list %}
+    {% with candidate=answer.candidate %}
+    <a href="{{ candidate.party.get_absolute_url }}">
+      <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');" data-toggle="tooltip" title="{{ candidate.party.name }} {{ candidate.name }}"></div>
+    </a>
+    {% endwith %}
+    {% endfor %}
+    {% endspaceless %}
+    {% if question.answer_set.count > question.get_chong_answer_list.count %}
+    {# 수정 필요 #}
+    <span>외 {{ question.answer_set.count }}명</span>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endfor %}
