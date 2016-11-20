@@ -5,4 +5,5 @@ html5lib
 beautifulsoup4
 django-bootstrap3
 django_widget_tweaks
-django-compressor
+django_compressor
+slimit
