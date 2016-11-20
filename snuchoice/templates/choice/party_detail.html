@@ -13,7 +13,7 @@
   <div class="mainland">
     <div class="container">
       <div class="party-caption">{{ party.election }} 선거운동본부</div>
-      {% with party_qs=party.election.party_set %}
+      {% with party_qs=party.election.parties %}
       {% if party_qs.count > 1 %}
       <div class="party-list">
         {% for p in party_qs.all %}
@@ -27,7 +27,7 @@
           <h2>{{ party.slogan }}</h2>
           <h1>{{ party.name }}</h1>
           {% spaceless %}
-          {% for candidate in party.candidate_set.all %}
+          {% for candidate in party.candidates.all %}
           <div class="candidate-wrapper">
             <div class="candidate" style="background-image: url('{{ candidate.get_photo_url }}');"></div>
             <div class="candidate-name">{% if candidate.position == "정" %}정후보{% else %}부후보{% endif %} <strong>{{ candidate.name }}</strong></div>
@@ -65,10 +65,10 @@
       <div class="row">
         <hr style="border-color: #{{ party.color }};">
       </div>
-      {% for candidate in party.candidate_set.all %}
+      {% for candidate in party.candidates.all %}
       <div class="answer-list">
         <h3>{{ candidate.name }}의 답변</h3>
-        {% for answer in candidate.answer_set.all %}
+        {% for answer in candidate.answers.all %}
         <a href="{{ answer.question.get_absolute_url }}#candidate-{{ candidate.id }}" class="uncolor undecorate">
           <div class="answer">
             {{ answer.question.title }}

@@ -209,7 +209,7 @@
       </div>
       {% endif %}
       {% endfor %}
-      {% elif question.answer_set.exists %}
+      {% elif question.answers.exists %}
       <div class="no-candidates">모든 후보들이 답변을 등록하였습니다.</div>
       {% else %}
       <div class="no-candidates">후보들이 현재 플랫폼에 참여하지 않고 있습니다.</div>
@@ -249,7 +249,7 @@
   </div>
   {% endif %}
   {% endif %}
-  {% if user == question.author and question.answer_set.count == 0 %}
+  {% if user == question.author and question.answers.count == 0 %}
   <div class="candidate-answer-action">
     <a href="{% url 'question_delete' question.pk %}">삭제하기</a>
   </div>

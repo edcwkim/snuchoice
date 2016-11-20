@@ -158,7 +158,7 @@ class Question(models.Model):
         return max(Question.THRESHOLD - self.voters.count(), 0)
 
     def get_answer_list(self, stance=None):
-        answer_list = self.answer_set.order_by('?')
+        answer_list = self.answers.order_by('?')
         if stance is not None:
             return answer_list.filter(stance=stance)
         else:
@@ -171,11 +171,11 @@ class Question(models.Model):
         return self.get_answer_list(stance=False)
 
     def get_replied_candidate_list(self):
-        return [answer.candidate for answer in self.answer_set.all()]
+        return [answer.candidate for answer in self.answers.all()]
 
     def get_unreplied_candidate_list(self):
         unreplied_candidate_list = []
-        for candidate in self.election.candidate_set.all():
+        for candidate in self.election.candidates.all():
             if not Answer.objects.filter(question=self, candidate=candidate).exists():
                 unreplied_candidate_list += [candidate]
         random.shuffle(unreplied_candidate_list)

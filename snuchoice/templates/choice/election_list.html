@@ -59,7 +59,7 @@
     <div class="election">
       <div class="row">
         <hr>
-        {% with parties=election.party_set.all %}
+        {% with parties=election.parties.all %}
         <h2>
           {{ election.name }}
           {% if parties.count %}

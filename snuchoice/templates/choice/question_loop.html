@@ -25,7 +25,7 @@
       <a href="{{ question.get_absolute_url }}">자세히 보기 &gt;</a>
     </div>
   </div>
-  {% if question.answer_set.exists %}
+  {% if question.answers.exists %}
   <div class="answered">
     <b>답변한 사람들</b>
     {% spaceless %}
@@ -37,9 +37,9 @@
     {% endwith %}
     {% endfor %}
     {% endspaceless %}
-    {% if question.answer_set.count > question.get_chong_answer_list.count %}
+    {% if question.answers.count > question.get_chong_answer_list.count %}
     {# 수정 필요 #}
-    <span>외 {{ question.answer_set.count }}명</span>
+    <span>외 {{ question.answers.count }}명</span>
     {% endif %}
   </div>
   {% endif %}

@@ -42,7 +42,7 @@ class QuestionDetail(generic.DetailView):
         unreplied_candidates = []
         for party in parties:
             answers = []
-            for candidate in party.candidate_set.order_by("-_position"):
+            for candidate in party.candidates.order_by("-_position"):
                 answer_qs = Answer.objects.filter(question=self.object, candidate=candidate)
                 answer_qs = answer_qs.filter(stance=stance) if stance is not None else answer_qs
                 if answer_qs.exists():
@@ -117,7 +117,7 @@ class QuestionDelete(UserPassesTestMixin, generic.DeleteView):
 
     def test_func(self):
         question = self.get_object()
-        return self.request.user == question.author and not question.answer_set.count()
+        return self.request.user == question.author and not question.answers.count()
 
 
 class QuestionVote(generic.View):
