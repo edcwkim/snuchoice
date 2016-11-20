@@ -13,6 +13,7 @@ INSTALLED_APPS = [
 
     'bootstrap3',
     'widget_tweaks',
+    'compressor',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -116,6 +117,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+]
+
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
@@ -127,3 +134,13 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.cssmin.rCSSMinFilter'
+]
+
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter',
+    'compressor.filters.jsmin.SlimItFilter',
+]
