@@ -36,7 +36,7 @@ class Election(models.Model):
     def get_college_elections(cls):
         college_elections = cls.objects.exclude(college_order=0).order_by(
             "college_order")
-        return college_elections.exclude(party__isnull=True)
+        return college_elections.exclude(parties__isnull=True)
 
 
 class Party(models.Model):
