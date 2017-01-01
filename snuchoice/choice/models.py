@@ -1,5 +1,6 @@
 import datetime
 import random
+import uuid
 from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db import models
@@ -9,17 +10,17 @@ from django.utils import timezone
 
 
 def upload_directory_path(modelname, fieldname):
-    global path
-
     def path(instance, filename):
-        return "{}/{}/{}_{}.{}".format(
+        return "{}/{}/{}.{}".format(
             modelname,
-            instance.pk,
             fieldname,
-            timezone.now().strftime("%M%S"),
+            uuid.uuid4(),
             filename.split(".")[-1],
         )
     return path
+
+def path(modelname, fieldname):
+    pass  # deprecated
 
 
 class Election(models.Model):
@@ -48,12 +49,19 @@ class Party(models.Model):
     slogan = models.CharField(max_length=100, blank=True)
     color = models.CharField(max_length=6, blank=True)
 
-    logo = models.FileField(upload_to=upload_directory_path("party", "logo"),
-        blank=True, null=True)  # svg 가능하도록
-    book = models.FileField(upload_to=upload_directory_path("party", "book"),
-        blank=True, null=True)
-    leaflet = models.FileField(upload_to=upload_directory_path("party", "leaflet"),
-        blank=True, null=True)
+    def upload_to_logo(instance, filename):
+        return upload_directory_path("party", "logo")(instance, filename)
+
+    def upload_to_book(instance, filename):
+        return upload_directory_path("party", "book")(instance, filename)
+
+    def upload_to_leaflet(instance, filename):
+        return upload_directory_path("party", "leaflet")(instance, filename)
+
+    # svg 가능하도록
+    logo = models.FileField(upload_to=upload_to_logo, blank=True, null=True)
+    book = models.FileField(upload_to=upload_to_book, blank=True, null=True)
+    leaflet = models.FileField(upload_to=upload_to_leaflet, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "parties"
@@ -74,8 +82,11 @@ class Candidate(models.Model):
 
     name = models.CharField(max_length=30)
     _position = models.BooleanField(verbose_name="정후보 여부")
-    photo = models.ImageField(upload_to=upload_directory_path("candidate", "photo"),
-        blank=True, null=True)
+
+    def upload_to_photo(instance, filename):
+        return upload_directory_path("candidate", "photo")(instance, filename)
+
+    photo = models.ImageField(upload_to=upload_to_photo, blank=True, null=True)
 
     class Meta:
         ordering = ('party', '-_position')
@@ -104,10 +115,13 @@ def set_election_field(sender, instance, **kwargs):
 class Press(models.Model):
 
     name = models.CharField(max_length=30)
-    logo = models.FileField(upload_to=upload_directory_path("press", "logo"),
-        blank=True, null=True)
     homepage = models.URLField(blank=True, null=True)
     facebook = models.URLField(blank=True, null=True)
+
+    def upload_to_logo(instance, filename):
+        return upload_directory_path("press", "logo")(instance, filename)
+
+    logo = models.FileField(upload_to=upload_to_logo, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "presses"
